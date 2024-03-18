@@ -16,7 +16,7 @@ container
 ├─ src
 │  ├─ App.tsx
 │  ├─ bootstrap.tsx
-│  └─ index.ts
+│  └─ index.tsx
 ├─ tsconfig.json
 ├─ webpack.config.js
 ├─ webpack.prod.js

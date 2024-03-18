@@ -1,4 +1,3 @@
-import { Text, Button, Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -8,18 +7,19 @@ const Counter = () => {
   const location = useLocation();
 
   return (
-    <Flex color="#000" gap="1rem" direction="column">
-      <Text>
+    <div >
+      <p>
+          esrdgfghkghjlfdgjghjlghljk
         Add by one each click <strong>APP-1</strong>
-      </Text>
-      <Text>Your click count : {count} </Text>
-      <Button onClick={() => setCount(count + 1)}>Click me</Button>
+      </p>
+      <span>Your click count : {count} </span>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
       {location.pathname !== "/" && (
-        <Button as={Link} to="/">
+        <Link  to="/">
           Back to container
-        </Button>
+        </Link>
       )}
-    </Flex>
+    </div>
   );
 };
 

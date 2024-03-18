@@ -25,7 +25,7 @@ app1
 │  ├─ bootstrap.tsx
 │  ├─ components
 │  │  └─ CounterAppOne.tsx
-│  └─ index.ts
+│  └─ index.tsx
 ├─ tsconfig.json
 ├─ webpack.config.js
 ├─ webpack.prod.js
