@@ -20,7 +20,7 @@
 	},
 	"scripts": {
 		"start": "webpack serve --progress --mode development --config webpack.config.js",
-		"build": "webpack --mode production",
+		"build": "export NODE_ENV=production && webpack --mode production",
 		"serve": "serve dist -p 3002",
 		"clean": "rm -rf dist"
 	},

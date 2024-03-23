@@ -13,21 +13,15 @@ const modes = {
   PRODUCTION: "production",
 };
 
-module.exports = ({ mode }) => {
-  const isProduction = mode === modes.PRODUCTION;
-  const env = dotenv.config().parsed;
-
-  const envKeys = Object.keys(env).reduce((prev, next) => {
-    prev[`process.env.${next}`] = JSON.stringify(env[next]);
-    return prev;
-  }, {});
+module.exports = () => {
+  const mode = process.env.NODE_ENV;
+  const isProduction = mode === 'production'
 
   const plugins = [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "public", "index.html"),
      // favicon: path.join(__dirname, "public", "images", "favicon.ico"),
     }),
-    new webpack.DefinePlugin(envKeys),
     new ModuleFederationPlugin({
       name: "app1",
       filename: "remoteEntry.js",
@@ -52,40 +46,31 @@ module.exports = ({ mode }) => {
     }),
   ];
 
+  if (!isProduction) {
+    const env = dotenv.config().parsed;
+
+    const envKeys = Object.keys(env).reduce((prev, next) => {
+      prev[`process.env.${next}`] = JSON.stringify(env[next]);
+      return prev;
+    }, {});
+    plugins.push(new webpack.DefinePlugin(envKeys))
+  }
+
   if (isProduction) {
     plugins.push(
         new MiniCssExtractPlugin({
           filename: "[name].[contenthash].css",
           chunkFilename: "[id].[contenthash].css",
         }),
-        new ImageMinimizerPlugin({
-          minimizer: {
-            implementation: ImageMinimizerPlugin.imageminMinify,
-            options: {
-              plugins: [
-                ["gifsicle", { interlaced: true }],
-                ["jpegtran", { progressive: true }],
-                ["optipng", { optimizationLevel: 8 }],
-                [
-                  "svgo",
-                  {
-                    plugins: [
-                      {
-                        name: "preset-default",
-                        params: {
-                          overrides: {
-                            removeViewBox: false,
-                          },
-                        },
-                      },
-                    ],
-                  },
-                ],
-              ],
-            },
-          },
-        }),
-        new TerserPlugin()
+        new TerserPlugin(),
+        new webpack.DefinePlugin({
+          'process.env': {
+            KEYCLOAK_URL: JSON.stringify(process.env.KEYCLOAK_URL),
+            KEYCLOAK_REALM: JSON.stringify(process.env.KEYCLOAK_REALM),
+            KEYCLOAK_CLIENT_ID: JSON.stringify(process.env.KEYCLOAK_CLIENT_ID),
+            BASE_URL_API: JSON.stringify(process.env.BASE_URL_API),
+          }
+        })
     );
   }
 
